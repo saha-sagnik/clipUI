@@ -1,9 +1,9 @@
-import Image from "next/image";
+import { Header } from "./websiteComponents/Header";
 
 export default function Home() {
   return (
     <div>
-      <h1>Get Started, main branch</h1>
+      <Header/>
     </div>
   );
 }
