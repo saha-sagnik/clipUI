@@ -42,7 +42,7 @@ export function Header() {
   return (
     <>
       <motion.header 
-        className="fixed top-0 left-0 right-0 z-50 border-b border-border/50"
+        className="fixed top-0 left-0 right-0 z-[60] border-b border-border/50"
         style={{
           backgroundColor: `rgba(24, 24, 38, ${headerOpacity.get()})`,
           backdropFilter: `blur(${headerBlur.get()}px)`,
