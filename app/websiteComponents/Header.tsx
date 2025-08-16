@@ -2,12 +2,17 @@
 
 import React, { useEffect, useState } from 'react'
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 import SearchBar from "./SearchBar";
 import SpotlightSearchModal from "./SpotlightSearchModal";
-import { FaGithub, FaStar } from "react-icons/fa"; // Add FaStar import
+import { navItems } from "../constants/navigation";
+import { FaGithub, FaStar } from "react-icons/fa";
 
 export function Header() {
   const { scrollY } = useScroll();
+  const router = useRouter();
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [stars, setStars] = useState<number | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -57,18 +62,20 @@ export function Header() {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
-            <motion.div 
-              className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="text-primary-foreground font-bold">C</span>
-            </motion.div>
-            <span className="text-xl font-bold">ClipUI</span>
-            {/* Version badge */}
-            <span className="ml-2 px-2 py-0.5 rounded-full bg-muted text-xs font-semibold text-primary-foreground border border-border">
-              v1.0.0
-            </span>
+            <Link href="/" className="flex items-center space-x-2">
+              <motion.div 
+                className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+              >
+                <span className="text-primary-foreground font-bold">C</span>
+              </motion.div>
+              <span className="text-xl font-bold">ClipUI</span>
+              {/* Version badge */}
+              <span className="ml-2 px-2 py-0.5 rounded-full bg-muted text-xs font-semibold text-primary-foreground border border-border">
+                v1.0.0
+              </span>
+            </Link>
           </motion.div>
           
           <div className="flex-1 flex justify-center">
@@ -76,19 +83,42 @@ export function Header() {
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
-            {["Components", "Docs", "Resources"].map((item, index) => (
-              <motion.a
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + index * 0.1 }}
-                whileHover={{ y: -2 }}
-              >
-                {item}
-              </motion.a>
-            ))}
+            {navItems.slice(0, 3).map((item, index) => {
+              const isActive = pathname === item.href || (item.href === '/components' && pathname.startsWith('/components'));
+              return (
+                <motion.div key={item.name}>
+                  <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + index * 0.1 }}
+                  >
+                    <Link
+                      href={item.href}
+                      className={`transition-colors relative ${
+                        isActive 
+                          ? 'text-primary font-medium' 
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      <motion.span
+                        whileHover={{ y: -2 }}
+                        className="block"
+                      >
+                        {item.name}
+                      </motion.span>
+                      {isActive && (
+                        <motion.div
+                          className="absolute -bottom-2 left-0 right-0 h-0.5 bg-primary rounded-full"
+                          layoutId="activeNavIndicator"
+                          initial={false}
+                          animate={{ opacity: 1 }}
+                        />
+                      )}
+                    </Link>
+                  </motion.div>
+                </motion.div>
+              );
+            })}
             <a
               href="https://github.com/saha-sagnik/UIMint"
               target="_blank"
