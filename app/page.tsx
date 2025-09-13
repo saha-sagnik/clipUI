@@ -1,9 +1,11 @@
-import Image from "next/image";
+import { Header } from "./websiteComponents/Header";
+import HeroSection from "./websiteComponents/HeroSection";
 
 export default function Home() {
   return (
     <div>
-      <h1>Get Started, main branch</h1>
+      <Header />
+      <HeroSection />
     </div>
   );
 }
